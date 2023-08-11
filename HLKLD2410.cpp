@@ -4,7 +4,7 @@
 Target_Status status;
 Command_Structure command;
 Command_Structure *cmd = &command;
-HardwareSerial LD2410(1);
+HardwareSerial LD2410(2);
 MODE mode = NORMAL_MODE;
 
 int32_t movement[9];

@@ -5,29 +5,49 @@ PCF8575 pcf_2(ADDRESS_2);
 
 pcf_arr sta;
 pcf_arr *status_pcf = &sta;
+
 void init_pcf(){
-    for(int i =0; i<16; i++){
-      pcf_1.pinMode(i, INPUT);
-      pcf_2.pinMode(i, INPUT);
-    }
+
     pcf_1.begin();
+    if(pcf_1.isConnected()) Serial.println("pcf_1 connect thanh cong");
+    else Serial.println("pcf_1 connect fail");
     pcf_2.begin();
+    if(pcf_2.isConnected()) Serial.println("pcf_2 connect thanh cong");
+    else Serial.println("pcf_2 connect fail");
     // pcf_1.digitalWrite(P0, HIGH);
     // pcf_2.digitalWrite(P0, HIGH);   
 }
 void read_pcf(){
   for(int i = 0; i<16; i++){
-    status_pcf->status_pcf_1[i] = pcf_1.digitalRead(i);
-    status_pcf->status_pcf_2[i] = pcf_2.digitalRead(i); 
-    // pcf_1.digitalRead(i);
-    // pcf_2.digitalRead(i);
-    status_pcf->status_pcf_all[i] = status_pcf->status_pcf_1[i];
+    //status_pcf->status_pcf_1[i] = pcf_1.read(i);
+    // Serial.print("state ");
+    // Serial.print(i);
+    // Serial.print(" ");
+    // Serial.println(pcf_1.read(i));
+    
+    status_pcf->status_pcf_all[i] = pcf_1.read(i);
+    //  Serial.print("state ");
+    // Serial.print(i);
+    // Serial.print(" ");
+    // Serial.println(status_pcf->status_pcf_all[i]);
   }
-  for(int i = 16; i< 32; i++){
-    status_pcf->status_pcf_all[i] = status_pcf->status_pcf_2[i-16];
+  for(int i = 16; i< pcf_pin; i++){
+    //status_pcf->status_pcf_2[i-16] = pcf_2.read(i-16);
+    // Serial.print("state ");
+    // Serial.print(i-16);
+    // Serial.print(" ");
+    // Serial.println(pcf_2.read(i-16));
+    status_pcf->status_pcf_all[i] = pcf_2.read(i-16);
+    
+    // Serial.print("state ");
+    // Serial.print(i);
+    // Serial.print(" ");
+    // Serial.println(status_pcf->status_pcf_all[i]);
+    
   }
 }
 pcf_arr *sta_ptr(){
+    read_pcf();
     return status_pcf;
 }
 void i2c_init(){
@@ -77,8 +97,10 @@ void i2c_scan(){
 
   delay(5000); // wait 5 seconds for next scan
 }
-void pcf_check(){
-    //pcf_1.digitalWrite(P0, HIGH);
-    if(pcf_1.digitalRead(P7) == 0 || pcf_2.digitalRead(P7) == 0) Serial.println("tu mo");
-    else Serial.println("tu dong");
+bool pcf_check(){
+  read_pcf();
+  for( int i =0; i <32; i++){
+    if(status_pcf->status_pcf_all[i] == 0) return true;
+    else if(status_pcf->status_pcf_all[i] == 1) return false;
+  }
 }

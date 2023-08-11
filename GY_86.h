@@ -8,15 +8,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <cmath>
-
-//chan cua gy-86
-#define I2C_SDA_PIN 21 
-#define I2C_SCL_PIN 22 
-#define MPU6050_ADDRESS  0x68
-#define threshold 2000
-#define threshold_Vel_X -1
-#define threshold_Vel_Y 4
-#define threshold_Vel_Z 35
+#include "config.h"
 
 
 typedef struct van_toc {
@@ -32,4 +24,4 @@ typedef struct van_toc {
 void GY_86_init();
 van_toc GY_86_data();
 bool handleData();
-#endif 
+#endif//GY-86

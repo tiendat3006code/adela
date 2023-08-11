@@ -11,7 +11,7 @@
 // LiquidCrystal_I2C lcd(lcd_address, 16, 2);
 van_toc vt;
 void setup() {
-  Serial.begin(115200);
+  //Serial.begin(9600);
 
   // LD2410_init();
   // GY_86_init();
@@ -27,8 +27,10 @@ void setup() {
   // ConfigAllSensitivity(90, 85, 80, 75, 75, 65, 60, 50, 45, 85, 80, 70, 65, 60, 50, 45);
   // ReadParemeters();
   // CloseCommandMode();
- i2c_init();
- //init_pcf();
+ //i2c_init();
+//  Serial.begin(9600);
+//  init_pcf();
+ tinker_init();
   //   // put your setup code here, to run once:
 }
 
@@ -81,6 +83,10 @@ void loop() {
   //   Serial.print("vi tri truc z: ");
   //   Serial.println(vt.velocityZ);
   //delay(10);
- i2c_scan();
+ SendData();
+ //delay(1000);
  //pcf_check();
+ //read_pcf();
+ //Serial.println(handleData());
+ delay(3000);
 }

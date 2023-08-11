@@ -7,20 +7,18 @@
 #include <Ticker.h>
 #include <Wire.h>
 #include <PCF8575.h>
-
-#define ADDRESS_1 0x21
-#define ADDRESS_2 0x22
+#include "config.h"
 
 typedef struct pcf_arr{
-    int status_pcf_1[16];
-    int status_pcf_2[16];
-    int status_pcf_all[32];
+    //int status_pcf_1[16];
+    //int status_pcf_2[16];
+    bool status_pcf_all[pcf_pin];
 };
 
 void init_pcf();
 void read_pcf();
 void i2c_init();
 void i2c_scan();
-void pcf_check();
+bool pcf_check();
 struct pcf_arr *sta_ptr();
 #endif

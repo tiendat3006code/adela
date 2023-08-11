@@ -11,24 +11,22 @@
 #include "Tinker.h"
 #include "cb_hanh_trinh.h"
 #include <SPI.h>
-
-// Khai báo các chân GPIO cho SoftSPI
-#define PIN_SOFT_SPI_MISO 19
-#define PIN_SOFT_SPI_MOSI 23
-#define PIN_SOFT_SPI_CLK  18
-#define PIN_SPI_CS   5
+#include "config.h"
 
 //UART Tinker
-#define Rx 3
-#define Tx 1
+#define TINKER_TX 2
+#define TINKER_RX 4
 
 typedef struct data_arr{
-  int txdata[40];
-  int rxdata[40];
-  int time_delay;
+  unsigned char txdata[11 + pcf_pin];
+  unsigned char rxdata[40];
+  //int time_delay = 3000;
+  unsigned char sync_buffer[10]; 
+  unsigned char receivedData[255];
 };
 void tinker_init();
 void SendData();
 void ReceiveData();
+void sync();
 
 #endif

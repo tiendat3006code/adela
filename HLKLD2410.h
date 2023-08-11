@@ -6,17 +6,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <Ticker.h>
-
-#define HLKLD2410
-#define NO_TARGET 0x00
-#define MOVEMENT_TARGET 0x01
-#define STATIONARY_TARGET 0x02
-#define MOVEMENT_AND_STATIONARY_TARGET 0x03
-//#define threshold 100
-
-//UART cam bien hien dien con nguoi
-#define rx 16
-#define tx 17
+#include "config.h"
 
 typedef struct Command_Structure {
   unsigned char TxData[64];
