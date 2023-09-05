@@ -9,10 +9,11 @@
 #include <PCF8575.h>
 #include "config.h"
 
-typedef struct pcf_arr{
-    //int status_pcf_1[16];
-    //int status_pcf_2[16];
-    bool status_pcf_all[pcf_pin];
+typedef struct pcf_arr {
+  //int status_pcf_1[16];
+  //int status_pcf_2[16];
+  bool status_pcf_all[pcf_pin];
+  unsigned char pcf_address[number_of_pcf];
 };
 
 void init_pcf();

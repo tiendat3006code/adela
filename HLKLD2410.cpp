@@ -92,8 +92,8 @@ bool DetectedHuman() {
     return false;
   else if (status == MOVEMENT_TARGET
            || status == STATIONARY_TARGET
-           || status == MOVEMENT_AND_STATIONARY_TARGET) 
-           return true;
+           || status == MOVEMENT_AND_STATIONARY_TARGET)
+    return true;
 }
 void SendCommand() {
   cmd->TxData[0] = 0xFD;

@@ -14,11 +14,11 @@ typedef struct Command_Structure {
   unsigned char DataLength;
   //int timeout;
 };
-typedef enum MODE{
+typedef enum MODE {
   ENGINEERING_MODE,
   NORMAL_MODE,
 };
-typedef enum Target_Status{
+typedef enum Target_Status {
   NoTarget,
   MovementTarget,
   StationaryTarget,
@@ -62,5 +62,5 @@ void ConfigSensitivity(int gate, int motion_sensitivity, int static_sensitivity)
 //xu ly response tu cam bien va dem so nguoi
 int readUartData();
 //chinh do nhay tu cong 0->9
-void ConfigAllSensitivity(int value_1, int value_2, int value_3, int value_4, int value_5, int value_6, int value_7, int value_8, int value_9, int value_10,int value_11,int value_12,int value_13,int value_14,int value_15,int value_16);
+void ConfigAllSensitivity(int value_1, int value_2, int value_3, int value_4, int value_5, int value_6, int value_7, int value_8, int value_9, int value_10, int value_11, int value_12, int value_13, int value_14, int value_15, int value_16);
 #endif  //HLK_LD2410

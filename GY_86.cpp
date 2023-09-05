@@ -94,7 +94,7 @@ van_toc GY_86_data() {
 bool handleData() {
   GY_86_data();
   float delta = sqrt(pow(vantoc.velocityX, 2) + pow(vantoc.velocityY, 2) + pow(vantoc.velocityZ, 2));
-    
+
   //Serial.println(delta);
   delay(100);
   if (delta >= threshold_gy_86) return true;

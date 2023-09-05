@@ -23,7 +23,7 @@
 #define rx 16
 #define tx 17
 
-//cong tac hanh trinh
+//dia chi I2C cua PCF8575
 #define ADDRESS_1 0x21
 #define ADDRESS_2 0x22
 
@@ -32,6 +32,6 @@
 //so chan khong su dung
 #define unused_pin 8
 //so chan duoc dung
-#define pcf_pin number_of_pcf*16 - 8
+#define pcf_pin number_of_pcf * 16 - unused_pin
 
 #endif//config

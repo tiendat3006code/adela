@@ -5,7 +5,7 @@ SPIClass SoftSPI(VSPI);
 //HardwareSerial tinker_uart(1);
 
 data_arr dt;
-data_arr *data= &dt;
+data_arr *data = &dt;
 
 // void buffer_init() {
 //   buffer.begin(96000, SERIAL_8N1, Rx, Tx);
@@ -14,7 +14,7 @@ data_arr *data= &dt;
 //   }
 //   Serial.println("success");
 // }
-void tinker_init(){
+void tinker_init() {
   // pinMode(PIN_SOFT_SPI_MISO, INPUT);
   // pinMode(PIN_SOFT_SPI_MOSI, OUTPUT);
   // pinMode(PIN_SOFT_SPI_CLK, OUTPUT);
@@ -31,15 +31,15 @@ void tinker_init(){
     //Serial.print(".");
   }
   // Serial.println("Open command mode success");
-  
+
   ConfigParameters(2, 2, 0);
   EnableEngineeringMode();
   ConfigAllSensitivity(90, 85, 80, 75, 75, 65, 60, 50, 45, 85, 80, 70, 65, 60, 50, 45);
   ReadParemeters();
   CloseCommandMode();
-  GY_86_init();  
+  GY_86_init();
   init_pcf();
-  
+
   // tinker_uart.begin(9600, SERIAL_8N1, TINKER_RX, TINKER_TX);
   // while(!tinker_uart){
   //   Serial.print(".");
@@ -53,23 +53,25 @@ void SendData() {
   RecieveResponse();
   read_pcf();
   //luu tru cac ket qua cua GY-86 truoc khi gui
-  data->txdata[0] = 1;
+  data->txdata[0] = 0x01;
   // data->txdata[1] = velocity.velocityX;
   // data->txdata[2] = velocity.velocityY;
   // data->txdata[3] = velocity.velocityZ;
   // data->txdata[4] = velocity.temperature;
-  data->txdata[1] = 2;
-  data->txdata[2] = 3;
-  data->txdata[3] = 4;
+  data->txdata[1] = 0x02;
+  data->txdata[2] = 0x03;
+  data->txdata[3] = 0x04;
+  //byte canh bao
   data->txdata[4] = handleData();
   //luu tru cac ket qua cua HLKLD2410
-  data->txdata[5] = DetectedHuman();
-  data->txdata[6] = readUartData();
+  data->txdata[5] = DetectedHuman();  //=1 neu nhu co nguoi
+  data->txdata[6] = readUartData();   //tra ve so nguoi
+  data->txdata[7] = 0xFF;
   //luu tru cac ket qua cua cb hanh trinh
-  for(int i =0; i<pcf_pin; i++){
+  for (int i = 0; i < pcf_pin; i++) {
     pcf_arr *pcf_ptr = sta_ptr();
-    data->txdata[7+i] = pcf_ptr->status_pcf_all[i];
-    if(data->txdata[7+i] == 0) send_or_not = true;
+    data->txdata[8 + i] = pcf_ptr->status_pcf_all[i];
+    if (data->txdata[8 + i] == 0) send_or_not = true;
     else send_or_not = false;
     //Serial.println(send_or_not);
     // int randomValue = random(2); // Tạo số ngẫu nhiên từ 0 đến 1
@@ -81,11 +83,11 @@ void SendData() {
     // Serial.println(pcf_ptr->status_pcf_all[i]);
   }
   //end command
-  //data->txdata[38] = 255;
-  data->txdata[31] = 5;
-  data->txdata[32] = 6;
-  data->txdata[33] = 7;
-  data->txdata[34] = 8;
+  data->txdata[8 + pcf_pin] = 0x05;
+  data->txdata[9 + pcf_pin] = 0x06;
+  data->txdata[10 + pcf_pin] = 0x07;
+  data->txdata[11 + pcf_pin] = 0x08;
+  // data->txdata[12 + pcf_pin] = 8;
   // Gửi dữ liệu đi qua SoftSPI
   //digitalWrite(PIN_SPI_CS, LOW); // Giảm CS xuống mức thấp trước khi truyền
   // for (int i = 0; i < 40; i++) {
@@ -94,14 +96,16 @@ void SendData() {
   // digitalWrite(PIN_SPI_CS, HIGH); // Khi gửi xong, nâng CS lên mức cao
 
   //if (send_or_not == true){
-  size_t length = sizeof(data->txdata);
-  //if (send_or_not == true){
-  Serial.write((uint8_t)length);
-  //Serial.write((uint8_t*)data, length);
-  Serial.write((uint8_t*)data->txdata, length);
+  //size_t length = sizeof(data->txdata);
+  if (send_or_not) {
+    // Serial.write((uint8_t)length);
+    //Serial.write((uint8_t*)data, length);
+    //Serial.write((uint8_t*)data->txdata, length);
+    for (int i = 0; i < 12 + pcf_pin; i++) Serial.write(data->txdata[i]);
+  }
   Serial.flush();
   //delay(data->time_delay);
- // }
+  // }
 
 
 
@@ -126,21 +130,35 @@ void SendData() {
 //   }
 //   buffer.flush();
 // }
-// void sync(){
-//   memset(data->sync_buffer, 255, 10);
-//   tinker_uart.write("hello tinker");
-//   // if(tinker_uart.availble() > 0){
-//   //   uint8_t receivedData = SerialUART.read(); // Đọc dữ liệu từ UART
-//   //   Serial.print("Received data from Raspberry Pi: ");
-//   //   Serial.println(receivedData);
-//   // }
-//   int i,l;
-//   while(tinker_uart.available() > 0 && i <= 255){
-//     l = tinker_uart.read();
-//     if(l >0) l = data->receivedData[i++];
-//     else {
-//       tinker_uart.flush();
-//       break;
-//     }
+void sync() {
+  memset(data->sync_buffer, 0xFF, 12 + pcf_pin);
+  for (int i = 0; i < 12 + pcf_pin; i++) Serial.write(data->sync_buffer[i]);
+}
+
+// if(tinker_uart.availble() > 0){
+//   uint8_t receivedData = SerialUART.read(); // Đọc dữ liệu từ UART
+//   Serial.print("Received data from Raspberry Pi: ");
+//   Serial.println(receivedData);
+// }
+// int i,l;
+// while(tinker_uart.available() > 0 && i <= 255){
+//   l = tinker_uart.read();
+//   if(l >0) l = data->receivedData[i++];
+//   else {
+//     tinker_uart.flush();
+//     break;
 //   }
 // }
+
+void ReceiveData() {
+  while (1) {
+    Serial.flush();
+    sync();
+    while (Serial.available()) {
+      char l = (char)Serial.read();
+      if (l = '1') break;
+    }
+    break;
+  }
+  SendData();
+}

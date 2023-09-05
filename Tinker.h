@@ -1,6 +1,6 @@
 #ifndef Tinker.h
 
-#define Tinker.h
+#define Tinker .h
 
 #include <HardwareSerial.h>
 #include <stdint.h>
@@ -17,12 +17,12 @@
 #define TINKER_TX 2
 #define TINKER_RX 4
 
-typedef struct data_arr{
-  unsigned char txdata[11 + pcf_pin];
+typedef struct data_arr {
+  unsigned char txdata[12 + pcf_pin];
   unsigned char rxdata[40];
   //int time_delay = 3000;
-  unsigned char sync_buffer[10]; 
-  unsigned char receivedData[255];
+  unsigned char sync_buffer[12 + pcf_pin];
+  unsigned char receivedData[10];
 };
 void tinker_init();
 void SendData();
